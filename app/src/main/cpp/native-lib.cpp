@@ -1,10 +1,12 @@
 #include <jni.h>
 #include <string>
+#include "realcode/headers/jniHelper.h"
+
 using namespace std;
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_jni_gopi_jnisampleapplication_MainActivity_stringFromJNI(
+Java_com_jni_gopi_jnisampleapplication_helpers_FirstJNI_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     string hello = "Hello from C++";
@@ -15,7 +17,7 @@ Java_com_jni_gopi_jnisampleapplication_MainActivity_stringFromJNI(
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_jni_gopi_jnisampleapplication_MainActivity_sampleJNI(
+Java_com_jni_gopi_jnisampleapplication_helpers_FirstJNI_sampleJNI(
         JNIEnv *env,
         jobject
 ) {
@@ -35,69 +37,19 @@ Java_com_jni_gopi_jnisampleapplication_MainActivity_sampleJNI(
 }
 
 
-/*
- * 1. // calling Java method from JNI
- *
- * JNIEXPORT void JNICALL
-Java_Callbacks_nativeMethod(JNIEnv *env, jobject obj, jint depth)
-{
-    jclass cls = (*env)->GetObjectClass(env, obj);
-    jmethodID mid = (*env)->GetMethodID(env, cls, "callback", "(I)V");
-    if (mid == 0) {
-        return;
-    }
-    printf("In C, depth = %d, about to enter Java\n", depth);
-    (*env)->CallVoidMethod(env, obj, mid, depth);
-    printf("In C, depth = %d, back from Java\n", depth);
+extern "C"
+JNIEXPORT jdoubleArray JNICALL
+Java_com_jni_gopi_jnisampleapplication_helpers_FirstJNI_sampleDoubleArrayFilter(JNIEnv *env,
+                                                                                jobject instance,
+                                                                                jdoubleArray doubleAry_,
+                                                                                jdouble doubleNumber) {
+    jint length = env->GetArrayLength(doubleAry_);
+    jdouble *doubleAry = env->GetDoubleArrayElements(doubleAry_, NULL);
+    jdouble *resultPtr = getDoublesGreaterThanNumber(doubleAry,length,
+                                                     doubleNumber); // no need of typecast
+    jdoubleArray resultAry = env->NewDoubleArray(length);
+    env->SetDoubleArrayRegion(resultAry, 0, length, resultPtr);
+
+    env->ReleaseDoubleArrayElements(doubleAry_, doubleAry, 0);
+    return resultAry;
 }
-
- // 2. calling static Java method from JNI
-
- JNIEXPORT void JNICALL
-Java_Callbacks_nativeMethod(JNIEnv *env, jobject obj, jint depth)
-{
-    jclass cls = (*env)->GetObjectClass(env, obj);
-    jmethodID mid = (*env)->GetStaticMethodID(env, cls, "incDepth", "(I)I");
-    if (mid == 0) {
-        return;
-    }
-    depth = (*env)->CallStaticIntMethod(env, cls, mid, depth);
-    ...
-}
-
- // 3. Passing Array to JNI
-
- JNIEXPORT jint JNICALL
-Java_IntArray_sumArray(JNIEnv *env, jobject obj, jintArray arr)
-{
-    int i, sum = 0;
-    jsize len = (*env)->GetArrayLength(env, arr);
-    jint *body = (*env)->GetIntArrayElements(env, arr, 0);
-    for (i=0; i<len; i++) {
-        sum += body[i];
-    }
-    (*env)->ReleaseIntArrayElements(env, arr, body, 0); // call release when ever Get... method has been called.
-    return sum;
-}
-
-// 4. Synchronization in JNI
-
- (*env)->MonitorEnter(env, obj);
-    ...                          // synchronized block //
-(*env)->MonitorExit(env, obj);
-
- 5. Call getByteArrayRegion instead of env->GetByteArrayElements(array, NULL);
-   a. jbyte* data = env->GetByteArrayElements(array, NULL);
-    if (data != NULL) {
-        memcpy(buffer, data, len);
-        env->ReleaseByteArrayElements(array, data, JNI_ABORT);
-    }
-
-    b. env->GetByteArrayRegion(array, 0, len, buffer);
-
-    (b) has more advantages than (a) as follows
-
-        i.) Requires one JNI call instead of 2, reducing overhead.
-        ii) Doesn't require pinning or extra data copies.
-        iii) Reduces the risk of programmer error — no risk of forgetting to call Release after something fails.
- * */
