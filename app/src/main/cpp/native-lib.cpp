@@ -86,4 +86,18 @@ Java_IntArray_sumArray(JNIEnv *env, jobject obj, jintArray arr)
     ...                          // synchronized block //
 (*env)->MonitorExit(env, obj);
 
+ 5. Call getByteArrayRegion instead of env->GetByteArrayElements(array, NULL);
+   a. jbyte* data = env->GetByteArrayElements(array, NULL);
+    if (data != NULL) {
+        memcpy(buffer, data, len);
+        env->ReleaseByteArrayElements(array, data, JNI_ABORT);
+    }
+
+    b. env->GetByteArrayRegion(array, 0, len, buffer);
+
+    (b) has more advantages than (a) as follows
+
+        i.) Requires one JNI call instead of 2, reducing overhead.
+        ii) Doesn't require pinning or extra data copies.
+        iii) Reduces the risk of programmer error — no risk of forgetting to call Release after something fails.
  * */
