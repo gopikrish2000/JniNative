@@ -17,7 +17,7 @@ double *getDoublesGreaterThanNumber(double *inputAry, int length, double numb, i
             j++;
         }
     }
-    *size = (j - 1);
+    *size = j;
     for(j; j<length; j++){
         *(result + j) = -100;  // make end elements  -100
     }
