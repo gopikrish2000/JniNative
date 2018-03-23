@@ -13,7 +13,7 @@ double *getDoublesGreaterThanNumber(double *inputAry, int length, double numb, i
     double *result = inputAry;
     for (i = 0; i < length; i++) {
         if (inputAry[i] > numb) {
-            *(result+i) = inputAry[i];
+            *(result+j) = inputAry[i];
             j++;
         }
     }
