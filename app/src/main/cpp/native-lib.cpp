@@ -45,10 +45,10 @@ Java_com_jni_gopi_jnisampleapplication_helpers_FirstJNI_sampleDoubleArrayFilter(
                                                                                 jdouble doubleNumber) {
     jint length = env->GetArrayLength(doubleAry_);
     jdouble *doubleAry = env->GetDoubleArrayElements(doubleAry_, NULL);
-    jdouble *resultPtr = getDoublesGreaterThanNumber(doubleAry,length,
-                                                     doubleNumber); // no need of typecast
-    jdoubleArray resultAry = env->NewDoubleArray(length);
-    env->SetDoubleArrayRegion(resultAry, 0, length, resultPtr);
+    int size = length;
+    jdouble *resultPtr = getDoublesGreaterThanNumber(doubleAry, length, doubleNumber, &size); // no need of typecast
+    jdoubleArray resultAry = env->NewDoubleArray(size);
+    env->SetDoubleArrayRegion(resultAry, 0, size, resultPtr);
 
     env->ReleaseDoubleArrayElements(doubleAry_, doubleAry, 0);
     return resultAry;

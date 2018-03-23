@@ -4,10 +4,11 @@
 
 #include <iostream>
 #include "headers/jniHelper.h"
+
 using namespace std;
 
 
-double *getDoublesGreaterThanNumber(double *inputAry,int length, double numb) {
+double *getDoublesGreaterThanNumber(double *inputAry, int length, double numb, int *size) {
     int i, j=0;
     double *result = inputAry;
     for (i = 0; i < length; i++) {
@@ -16,8 +17,9 @@ double *getDoublesGreaterThanNumber(double *inputAry,int length, double numb) {
             j++;
         }
     }
+    *size = (j - 1);
     for(j; j<length; j++){
-        *(result + j) = -100;
+        *(result + j) = -100;  // make end elements  -100
     }
     return result;
 }

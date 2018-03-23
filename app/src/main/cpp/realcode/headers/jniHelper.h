@@ -8,4 +8,4 @@
 #endif //JNISAMPLEAPPLICATION_JNIHELPER_H
 
 
-double *getDoublesGreaterThanNumber(double *inputAry, int length, double numb);
+double *getDoublesGreaterThanNumber(double *inputAry, int length, double numb, int *pInt);
