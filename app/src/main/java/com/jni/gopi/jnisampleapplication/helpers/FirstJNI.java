@@ -15,4 +15,5 @@ public class FirstJNI {
     public native int[] sampleJNI();
 
     public native double[] sampleDoubleArrayFilter(double[] doubleAry, double doubleNumber);
+    public native String startCameraPreview(byte[] byteAry);
 }

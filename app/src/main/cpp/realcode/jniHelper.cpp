@@ -23,3 +23,4 @@ double *getDoublesGreaterThanNumber(double *inputAry, int length, double numb, i
     }
     return result;
 }
+

@@ -51,5 +51,22 @@ Java_com_jni_gopi_jnisampleapplication_helpers_FirstJNI_sampleDoubleArrayFilter(
     env->SetDoubleArrayRegion(resultAry, 0, size, resultPtr);
 
     env->ReleaseDoubleArrayElements(doubleAry_, doubleAry, 0);
+
     return resultAry;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_jni_gopi_jnisampleapplication_helpers_FirstJNI_startCameraPreview(JNIEnv *env,
+                                                                           jobject instance,
+                                                                           jbyteArray byteAry_) {
+    jint length = env->GetArrayLength(byteAry_);
+    jbyte *jbyte = env->GetByteArrayElements(byteAry_, NULL);
+    char *charPointer = ((char *) jbyte);
+    int lengthOfArray = length;
+//    printf("data returned from startCameraPreview");
+//    printf(charPointer);
+    printf("%s", charPointer);
+    env->ReleaseByteArrayElements(byteAry_, jbyte, 0);
+    return env->NewStringUTF(charPointer);
 }
